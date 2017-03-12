@@ -1,0 +1,93 @@
+# UCM Consumer Search Swagger Spec.
+# Be aware that YAML has indentation based scoping.
+# Code completion support is available so start typing for available options.
+swagger: '2.0'
+
+# This is your document metadata
+info:
+  version: 1.0.0
+  title: <PostConsumer>
+  termsOfService: http://rccl.com/terms/
+  contact: 
+    name: GuestAccount team
+    url: http://rccl.io
+  license:
+    name: RCCL
+    url: http://rccl.com/licenses/by/1.0/
+basePath: /v1
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json  
+
+# Describe your paths here
+paths:
+  /consumers:
+    post:
+      description: Service to create/update the consumer in UCM.
+      operationId: addConsumer
+      produces:
+        - application/json    
+      parameters:
+        - name: consumer
+          in: body
+          #description: ""
+          required: true
+          schema:
+            $ref: '#definitions/consumer'  
+          
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        "200":
+          description: Successful response
+          schema:
+              $ref: '#/definitions/consumerData'
+        default:
+          description: Error payload
+          schema:
+              $ref: '#/definitions/error'      
+          # A schema describing your response object.
+          # Use JSON Schema format
+          #examples:
+            #application/json:
+              #{consumerData: {consumerId: 16398698}}
+                
+definitions:
+  consumer:
+    type: object
+    required:
+      - firstName
+      - lastName
+      - email
+      - crossReferenceId
+    properties:
+      firstName:
+        type: string
+      lastName:
+        type: string
+      email: 
+        type: string
+      crossReferenceId:
+        type: string
+      birthDate:
+        type: string
+      consumerId:
+        type: string
+  consumerData:
+    type: object
+    required:
+      - consumerId
+    properties:
+      consumerId:
+        type: string
+  error:
+    type: object
+    required:
+      - message
+    properties:
+      message:
+        type: string      
