@@ -1,0 +1,95 @@
+# Example YAML to get you started quickly.
+# Be aware that YAML has indentation based scoping.
+# Code completion support is available so start typing for available options.
+swagger: '2.0'
+
+# This is your document metadata
+info:
+  version: "1.0.0"
+  title: Get Guest Bookings Summary
+
+# Describe your paths here
+paths:
+  # This is a path endpoint. Change it.
+  /bookingSummaries:
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown
+      description: |
+        Gets `BookingSummaries` objects.
+        Returns a summary of the bookings associated with the the cruise passenger
+      # This is array of GET operation parameters:
+      parameters:
+        # An example parameter that is in query and is required
+        -
+          name: lname
+          in: query
+          description: Passenger's last name
+          required: true
+          type: string
+        -
+          name: fname
+          in: query
+          description: Passenger's first name
+          required: true
+          type: string
+        -
+          name: shipname
+          in: query
+          description: Name of the ship
+          required: false
+          type: string
+        -
+          name: saildate
+          in: query
+          description: Date of sailing
+          required: false
+          type: integer
+        -
+          name: birthyear
+          in: query
+          description: Passenger's year of birth
+          required: false
+          type: integer
+        -
+          name: birthmonth
+          in: query
+          description: Passenger's month of birth
+          required: false
+          type: integer
+        -
+          name: bookingid
+          in: query
+          description: Passenger's booking id for the sailing
+          required: false
+          type: integer
+        -
+          name: consumerid
+          in: query
+          description: Passenger's consumer id
+          required: false
+          type: integer
+                                                                                                                                                                    
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            title: ArrayOfBookingSummaries
+            type: array
+            items:
+              title: BookingSummary
+              type: object
+              properties:
+                bookingid:
+                  type: integer
+                consumerid:
+                  type: integer
+                saildate:
+                  type: integer
+                shipcode:
+                  type: string
+                  
