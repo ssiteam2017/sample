@@ -27,17 +27,18 @@ produces:
 paths:
   /consumers:
     post:
-      description: Service to create/update the consumer in UCM.
-      operationId: addConsumer
+      description: | 
+         Service to create/update the consumer in UCM.
+      #operationId: addConsumer
       produces:
         - application/json    
       parameters:
-        - name: consumer
-          in: body
-          #description: ""
+        - in: body
+          name: body
+          description: ""
           required: true
           schema:
-            $ref: '#definitions/consumer'  
+            $ref: '#/definitions/consumerIn'  
           
       # Expected responses for this operation:
       responses:
@@ -46,6 +47,10 @@ paths:
           description: Successful response
           schema:
               $ref: '#/definitions/consumerData'
+        "422":
+          description: Unprocessable entry
+          schema:
+              $ref: '#/definitions/errorUnprocessable'      
         default:
           description: Error payload
           schema:
@@ -57,7 +62,7 @@ paths:
               #{consumerData: {consumerId: 16398698}}
                 
 definitions:
-  consumer:
+  consumerIn:
     type: object
     required:
       - firstName
@@ -67,16 +72,22 @@ definitions:
     properties:
       firstName:
         type: string
+        example: John
       lastName:
         type: string
+        example: Smith
       email: 
         type: string
+        example: John@Smith.com
       crossReferenceId:
         type: string
+        example: B2C
       birthDate:
         type: string
+        example: "1960-02-08"
       consumerId:
         type: string
+        example: "16398698"
   consumerData:
     type: object
     required:
@@ -84,6 +95,13 @@ definitions:
     properties:
       consumerId:
         type: string
+  errorUnprocessable:
+    type: object
+    required:
+      - message
+    properties:
+      message:
+        type: string      
   error:
     type: object
     required:
@@ -91,3 +109,4 @@ definitions:
     properties:
       message:
         type: string      
+        
