@@ -22,14 +22,16 @@ consumes:
   - application/json
 produces:
   - application/json  
-
+#host: '10.16.6.134:8090'
 # Describe your paths here
 paths:
-  /consumers:
-    post:
+  /guestProfiles:
+    put:
+      tags:
+        - guestProfile
       description: | 
          Service to create/update the consumer in UCM.
-      #operationId: addConsumer
+      operationId: updateConsumer
       produces:
         - application/json    
       parameters:
@@ -68,7 +70,7 @@ definitions:
       - firstName
       - lastName
       - email
-      - crossReferenceId
+      - vdsAccountId
     properties:
       firstName:
         type: string
@@ -79,7 +81,7 @@ definitions:
       email: 
         type: string
         example: John@Smith.com
-      crossReferenceId:
+      vdsAccountId:
         type: string
         example: B2C
       birthDate:
@@ -109,4 +111,3 @@ definitions:
     properties:
       message:
         type: string      
-        
