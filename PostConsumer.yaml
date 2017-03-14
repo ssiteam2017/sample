@@ -44,8 +44,8 @@ paths:
           
       # Expected responses for this operation:
       responses:
-              '200':
-                description: Success
+        '200':
+          description: Success
   
         "422":
           description: Unprocessable entry
