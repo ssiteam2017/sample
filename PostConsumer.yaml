@@ -40,7 +40,7 @@ paths:
           description: ""
           required: true
           schema:
-            $ref: '#/definitions/PersonalInfo'  
+            $ref: '#/definitions/request-body'  
           
       # Expected responses for this operation:
       responses:
