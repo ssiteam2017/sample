@@ -1,4 +1,4 @@
-# UCM Consumer Search Swagger Spec.
+# UCM Consumer Create/Update Spec.
 # Be aware that YAML has indentation based scoping.
 # Code completion support is available so start typing for available options.
 swagger: '2.0'
@@ -14,7 +14,7 @@ info:
   license:
     name: RCCL
     url: http://rccl.com/licenses/by/1.0/
-basePath: /v1
+#basePath: /v1
 schemes:
   - http
   - https
@@ -40,7 +40,7 @@ paths:
           description: ""
           required: true
           schema:
-            $ref: '#/definitions/consumerIn'  
+            $ref: '#/definitions/PersonalInfo'  
           
       # Expected responses for this operation:
       responses:
@@ -64,7 +64,19 @@ paths:
               #{consumerData: {consumerId: 16398698}}
                 
 definitions:
-  consumerIn:
+  PersonalInfo:
+            #$ref: "#/definitions/PersonalInfo"
+    type: object
+    properties:
+      personalInfo:
+        $ref: "#/definitions/PersonalIn"
+      addresses:
+        type: array
+        items:
+          $ref: "#/definitions/Addresses"
+      contacts:
+          $ref: "#/definitions/Contacts"
+  PersonalIn:
     type: object
     required:
       - firstName
@@ -74,13 +86,13 @@ definitions:
     properties:
       firstName:
         type: string
-        example: John
+        example: AlppHH
       lastName:
         type: string
-        example: Smith
+        example: PriuHH
       email: 
         type: string
-        example: John@Smith.com
+        example: AlppHH@PriuHH.com
       vdsAccountId:
         type: string
         example: B2C
@@ -89,7 +101,10 @@ definitions:
         example: "1960-02-08"
       consumerId:
         type: string
-        example: "16398698"
+        example: "90920730"
+      gender:
+        type: string
+        example: "Female"        
   consumerData:
     type: object
     required:
@@ -97,6 +112,36 @@ definitions:
     properties:
       consumerId:
         type: string
+  Addresses:
+    type: object
+    properties:
+      type:
+        type: string
+        example: "1"
+      address:
+        type: string
+        example: "9771 NE 194 St"
+      city:
+        type: string
+        example: "Aventura"
+      stateCode:
+        type: string
+        example: "FL"
+      postalCode:
+        type: string
+        example: "33180"
+      countryCode:
+        type: string
+        example: "USA"
+  Contacts:
+    type: object
+    properties:
+      telephoneNumber:
+        type: string
+        example: "209917710099"
+      telephoneType:
+        type: string
+        example: "1"
   errorUnprocessable:
     type: object
     required:
