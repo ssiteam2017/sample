@@ -22,7 +22,7 @@ consumes:
   - application/json
 produces:
   - application/json  
-#host: '10.16.6.134:8090'
+host: mocktarget.apigee.net
 # Describe your paths here
 paths:
   /guestProfiles:
