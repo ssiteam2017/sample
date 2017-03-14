@@ -40,13 +40,15 @@ paths:
           description: ""
           required: true
           schema:
-            $ref: '#/definitions/request-body'  
+            $ref: '#/definitions/PersonalInfo'  
           
       # Expected responses for this operation:
       responses:
-        '200':
-          description: Success
-  
+        # Response code
+        "200":
+          description: Successful response
+          schema:
+              $ref: '#/definitions/consumerData'
         "422":
           description: Unprocessable entry
           schema:
@@ -153,9 +155,4 @@ definitions:
       - message
     properties:
       message:
-        type: string
-  request-body:
-    properties:
-      replace-me:
-        type: object
-        description: 'Replace with request payload in application/json, application/x-www-form-urlencoded, or application/xml format.'      
+        type: string      
