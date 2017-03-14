@@ -46,7 +46,7 @@ paths:
       responses:
               '200':
                 description: Success
-  /statuscode/{code}:
+  
         "422":
           description: Unprocessable entry
           schema:
