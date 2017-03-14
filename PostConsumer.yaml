@@ -44,11 +44,9 @@ paths:
           
       # Expected responses for this operation:
       responses:
-        # Response code
-        "200":
-          description: Successful response
-          schema:
-              $ref: '#/definitions/consumerData'
+              '200':
+                description: Success
+  /statuscode/{code}:
         "422":
           description: Unprocessable entry
           schema:
@@ -155,4 +153,9 @@ definitions:
       - message
     properties:
       message:
-        type: string      
+        type: string
+  request-body:
+    properties:
+      replace-me:
+        type: object
+        description: 'Replace with request payload in application/json, application/x-www-form-urlencoded, or application/xml format.'      
