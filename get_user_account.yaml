@@ -12,7 +12,7 @@ consumes:
 produces:
   - application/json
 paths:
-   '/{accountId}?password={pwd}':
+   '/{accountId}':
      get:
       description: Get account info for a given accountId.
       parameters:
@@ -20,8 +20,8 @@ paths:
           in: path
           required: true         
           type: string
-        - name: pwd
-          in: path
+        - name: password
+          in: query
           required: true
           type: string
       responses:
