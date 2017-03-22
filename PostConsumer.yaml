@@ -31,7 +31,7 @@ paths:
         - guestProfile
       description: | 
          Service to create/update the consumer in UCM.
-      operationId: updateConsumer
+      operationId: createUpdateConsumer
       produces:
         - application/json    
       parameters:
@@ -61,7 +61,7 @@ paths:
           # Use JSON Schema format
           #examples:
             #application/json:
-              #{consumerData: {consumerId: 16398698}}
+              #{consumerData: {consumerID: 16398698}}
                 
 definitions:
   PersonalInfo:
@@ -82,7 +82,7 @@ definitions:
       - firstName
       - lastName
       - email
-      - vdsAccountId
+      - accountID
     properties:
       firstName:
         type: string
@@ -93,13 +93,13 @@ definitions:
       email: 
         type: string
         example: AlppHH@PriuHH.com
-      vdsAccountId:
+      accountID:
         type: string
         example: B2C
       birthDate:
         type: string
         example: "1960-02-08"
-      consumerId:
+      consumerID:
         type: string
         example: "90920730"
       gender:
@@ -108,9 +108,9 @@ definitions:
   consumerData:
     type: object
     required:
-      - consumerId
+      - consumerID
     properties:
-      consumerId:
+      consumerID:
         type: string
   Addresses:
     type: object
