@@ -12,11 +12,11 @@ consumes:
 produces:
   - application/json
 paths:
-   '/{accountId}':
+   '/{accountID}':
      get:
-      description: Get account info for a given accountId.
+      description: Get account info for a given accountID.
       parameters:
-        - name: accountId
+        - name: accountID
           in: path
           required: true         
           type: string
@@ -36,9 +36,9 @@ paths:
 definitions:
   AccountInfoResponse:
     required:
-      - accountId
+      - accountID
     properties:
-      accountId:
+      accountID:
        type: string
       consumerId:
        type: string
