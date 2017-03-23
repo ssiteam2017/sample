@@ -25,7 +25,7 @@ produces:
 host: mocktarget.apigee.net
 # Describe your paths here
 paths:
-  /guestProfiles:
+  /v1/consumers:
     put:
       tags:
         - guestProfile
