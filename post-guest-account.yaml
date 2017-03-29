@@ -1,0 +1,140 @@
+swagger: '2.0'
+
+info:
+  title: Guest Account Creation POST
+  description: The specification for the guest account creation POST.
+  version: "1.0.0"
+
+host: localhost:9000
+
+# Supported schemes.
+schemes:
+  - http
+  - https
+
+# Path prefix.
+basePath: /v1
+
+produces:
+  - application/json
+
+paths:
+  /guestAccounts:
+    post:
+      summary: Guest Account Creation
+      description: |
+        This endpoint permits the creation of a guest account via a POST. A
+        successful response simply returns the unique ID identifying
+        the newly created user. A failure returns an identifying error with any
+        potentially useful information.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/GuestAccountPostRequestBody'
+      tags:
+        - Guest Accounts
+      responses:
+        201:
+          description: The ID of the created guest account.
+          schema:
+            $ref: '#/definitions/GuestAccountPostSuccessResponse'
+        422:
+          description: A well-formed but somehow improper post was made.
+          schema:
+            $ref: '#/definitions/GuestAccountPost422Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/DefaultError'
+definitions:
+  GuestAccountPostRequestBody:
+    description: The POST request body schema.
+    type: object
+    properties:
+      firstName:
+        type: string
+        description: The guest's first name.
+      lastName:
+        type: string
+        description: The guest's last name.
+      email:
+        type: string
+        description: The guest email.
+      password:
+        type: password
+        format: password
+        description: The guest's desired password.
+      brand:
+        type: string
+        description: The single-char representation of the brand.
+      termsAndConditionsAgreement:
+        $ref: '#/definitions/TermsAndConditionsAgreement'
+      securityQuestions:
+        description: A list of security question and answers.
+        type: array
+        items:
+          $ref: '#/definitions/SecurityQuestion'
+  TermsAndConditionsAgreement:
+    description: The representation of a terms and conditions agreement.
+    type: object
+    properties:
+      acceptTime:
+        type: number
+        description: |
+          The instant (in milliseconds) that the user accepted the user accepted
+          the terms and conditions.
+      version:
+        type: string
+        description: The version number of the agreed upon terms and conditions.
+  SecurityQuestion:
+    description: The representation of a security question and answer.
+    type: object
+    properties:
+      question:
+        type: string
+        description: The security question.
+      answer:
+        type: string
+        description: The answer to the question.
+  GuestAccountPostSuccessResponse:
+    type: object
+    properties:
+      accountId:
+        type: string
+        description: The created guest account's ID.
+      links:
+        description: A list of links of interest.
+        type: array
+        items:
+          $ref: '#/definitions/Link'
+  GuestAccountPost422Error:
+    type: object
+    properties:
+      error:
+        type: string
+      links:
+        description: A list of links of interest.
+        type: array
+        items:
+          $ref: '#/definitions/Link'
+  DefaultError:
+    type: object
+    properties:
+      error:
+        type: string
+      fields:
+        type: string
+  Link:
+    type: object
+    properties:
+      href:
+        type: string
+      rel:
+        type: string
+        
