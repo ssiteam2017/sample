@@ -1,0 +1,352 @@
+# this is an example of the Uber API
+# as a demonstration of an API spec in YAML
+swagger: "2.0"
+info:
+  title: "Guest Account API"
+  description: "Guest Account Microservices"
+  version: "v1"
+# the domain of the service
+host: "localhost:9001"
+
+# array of all schemes that your API supports
+schemes:
+  - http
+  - https
+# will be prefixed to all paths
+basePath: /v1/guestAccounts
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+   /{accountId}:
+     get:
+       description: Get account info for a given accountID.
+       parameters:
+        - name: accountId
+          in: path
+          required: true         
+          type: string
+        - name: password
+          in: query
+          required: true
+          type: string
+       responses:
+         200:
+           description: OK
+           schema:
+             $ref: '#/definitions/AccountInfoResponse'
+         default:
+           description: Error
+           schema:
+             $ref: '#/definitions/Error'
+   /:
+    post:
+      summary: "Guest Account Creation"
+      description: "This endpoint permits the creation of a guest account via a POST. A successful response simply returns the unique ID identifying the newly created user. A failure returns an identifying error with any potentially useful information."
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/GuestAccountPostRequestBody'
+      tags:
+        - Guest Accounts
+      responses:
+        201:
+          description: The ID of the created guest account.
+          schema:
+            $ref: '#/definitions/GuestAccountPostSuccessResponse'
+        422:
+          description: A well-formed but somehow improper post was made.
+          schema:
+            $ref: '#/definitions/GuestAccountPost422Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/DefaultError'
+   /securityQuestions:
+     get:
+       summary: "Guest Account Security Questions"
+       description: "A service to retrieve a list of security questions"
+       parameters:
+        - name: emailId
+          in: query
+          required: false
+          type: string
+       responses:
+         200:
+           description: OK
+           schema:
+             $ref: '#/definitions/SecurityQuestionsList'
+         422:
+           description: "Unprocessable entry"
+           schema:
+             $ref: '#/definitions/Error'      
+         default:
+           description: "Error payload"
+           schema:
+             $ref: '#/definitions/Error'
+   /{emailId}/validation:
+    get:
+      summary: "Guest Account email validation"
+      description: "Validates email address if it's already existing in IAM. It will return one of the following status (Exists, DoesNotExists, NeedsToBeMigrated)"
+      parameters:
+        - name: emailId
+          in: path
+          required: true
+          type: string
+          format: string
+      tags:
+        - Guest Accounts
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/ValidateEmailAddressResponse"
+   /{accountId}/password:
+    put:
+      summary: "Guest Account password update"
+      description: "Update or reset account password for a given accountId."
+      parameters:
+        - name: request body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateAccountPasswordRequest'
+        - name: accountId
+          in: path
+          required: true
+          type: string
+          format: alphanumeric
+      tags:
+        - Guest Accounts
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/UpdateAccountPasswordResponse'
+        404:
+          description: "Resource not found."
+          schema: 
+            $ref: '#/definitions/Error'
+        429:
+          description: "Too many requests."
+          schema: 
+            $ref: '#/definitions/Error'
+        503:
+          description: "Generic error (failback)."
+          schema: 
+            $ref: '#/definitions/Error'
+        422:
+          description: "Unprocessable Entry"
+          schema:
+            $ref: '#/definitions/Error'
+   /{emailId}/forgotPassword:
+    put:
+      summary: "Guest Account Forgot Password"
+      description: "Update the account's forgotten password"
+      parameters:
+        - name: request body
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/ForgotAccountPasswordRequest"
+        - name: emailId
+          in: path
+          required: true
+          type: string
+      tags:
+        - Guest Accounts
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/ForgotAccountPasswordResponse"
+        404:
+          description: "Resource not found."
+          schema: 
+            $ref: "#/definitions/Error"
+        429:
+          description: "Too many requests."
+          schema: 
+            $ref: "#/definitions/Error"
+        503:
+          description: "Generic error (failback)."
+          schema: 
+            $ref: "#/definitions/Error"
+        422:
+          description: "Unprocessable Entry"
+          schema:
+            $ref: "#/definitions/Error"
+definitions:
+  AccountInfoResponse:
+    required:
+      - accountID
+    properties:
+      accountID:
+       type: string
+      consumerId:
+       type: string
+      firstName:
+       type: string
+      lastName:
+       type: string
+      email:
+       type: string
+      brand:
+       type: string
+  GuestAccountPostRequestBody:
+    description: The POST request body schema.
+    type: object
+    properties:
+      firstName:
+        type: string
+        description: The guest's first name.
+      lastName:
+        type: string
+        description: The guest's last name.
+      email:
+        type: string
+        description: The guest email.
+      password:
+        type: string
+        format: password
+        description: The guest's desired password.
+      brand:
+        type: string
+        description: The single-char representation of the brand.
+      termsAndConditionsAgreement:
+        $ref: '#/definitions/TermsAndConditionsAgreement'
+      securityQuestions:
+        description: A list of security question and answers.
+        type: array
+        items:
+          $ref: '#/definitions/SecurityQuestion'
+  TermsAndConditionsAgreement:
+    description: The representation of a terms and conditions agreement.
+    type: object
+    properties:
+      acceptTime:
+        type: number
+        description: |
+          The instant (in milliseconds) that the user accepted the user accepted
+          the terms and conditions.
+      version:
+        type: string
+        description: The version number of the agreed upon terms and conditions.
+  SecurityQuestionsList:
+    description: Represents a list of security questions.
+    type: object
+    items:
+      $ref: '#/definitions/Question'
+  Question:
+    description: Represents a unit of security question list.
+    type: object
+    properties:
+      question:
+        type: string
+  SecurityQuestion:
+    description: The representation of a security question and answer.
+    type: object
+    properties:
+      question:
+        type: string
+        description: The security question.
+      answer:
+        type: string
+        description: The answer to the question.
+  GuestAccountPostSuccessResponse:
+    type: object
+    properties:
+      accountId:
+        type: string
+        description: The created guest account's ID.
+      links:
+        description: A list of links of interest.
+        type: array
+        items:
+          $ref: '#/definitions/Link'
+  GuestAccountPost422Error:
+    type: object
+    properties:
+      error:
+        type: string
+      links:
+        description: A list of links of interest.
+        type: array
+        items:
+          $ref: '#/definitions/Link'
+  DefaultError:
+    type: object
+    properties:
+      error:
+        type: string
+      fields:
+        type: string
+  Link:
+    type: object
+    properties:
+      href:
+        type: string
+      rel:
+        type: string
+  ValidateEmailAddressResponse:
+    type: object
+    properties:
+      status:
+        type: string
+        description: "Returns one of the following Exists, DoesNotExists, NeedsToBeMigrated"
+  UpdateAccountPasswordRequest:
+    type: object
+    required:
+      - authenticationToken
+      - password
+    properties:
+      authenticationToken:
+        type: string
+        format: alphanumeric
+      password:
+        type: string
+        format: alphanumeric
+      email:
+        type: string
+      brand:
+        type: string
+  UpdateAccountPasswordResponse:
+    type: object
+    properties:
+      consumerId:
+        type: string
+      accountId:
+        type: string
+  ForgotAccountPasswordRequest:
+    type: object
+    required:
+      - password
+      - securityQuestions
+    properties:
+      password:
+        type: string
+        format: alphanumeric
+      securityQuestions: 
+        type: array
+        items:
+          $ref: "#/definitions/SecurityQuestion"
+  ForgotAccountPasswordResponse:
+    type: object
+    properties:
+      consumerId:
+        type: string
+      accountId:
+        type: string
+  Error: 
+    type: object
+    properties: 
+      error: 
+        type: string
+
