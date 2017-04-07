@@ -19,11 +19,13 @@ consumes:
 produces:
   - application/json
 paths:
-   /{accountId}:
+   /{id}:
      get:
-       description: Get account info for a given accountID.
+       summary: "Guest Account Retrieval"
+       description: "Get account info for a given accountId."
        parameters:
-        - name: accountId
+        - name: id
+          description: "accountId"
           in: path
           required: true         
           type: string
@@ -35,11 +37,44 @@ paths:
          200:
            description: OK
            schema:
-             $ref: '#/definitions/AccountInfoResponse'
+             $ref: "#/definitions/AccountInfoResponse"
          default:
            description: Error
            schema:
-             $ref: '#/definitions/Error'
+             $ref: "#/definitions/Error"
+     put:
+       summary: "Guest Account Update"
+       description: "This endpoint enable updates to Guest Account through Saviynt API."
+       consumes:
+         - application/json
+       produces:
+         - application/json
+       parameters:
+         - name: id
+           description: "emailId"
+           in: path
+           required: true
+           type: string
+         - name: body
+           in: body
+           required: true
+           schema:
+             $ref: '#/definitions/GuestAccountPutRequestBody'
+       tags:
+         - Guest Accounts
+       responses:
+         200:
+           description: "Success response message."
+           schema:
+             $ref: "#/definitions/GuestAccountPutSuccessResponse"
+         422:
+           description: "A well-formed but somehow improper put was made."
+           schema:
+             $ref: "#/definitions/GuestAccount422Error"
+         default:
+           description: "Unexpected error"
+           schema:
+             $ref: '#/definitions/DefaultError'
    /:
     post:
       summary: "Guest Account Creation"
@@ -53,20 +88,20 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/GuestAccountPostRequestBody'
+            $ref: "#/definitions/GuestAccountPostRequestBody"
       tags:
         - Guest Accounts
       responses:
         201:
-          description: The ID of the created guest account.
+          description: "The ID of the created guest account."
           schema:
             $ref: '#/definitions/GuestAccountPostSuccessResponse'
         422:
-          description: A well-formed but somehow improper post was made.
+          description: "A well-formed but somehow improper post was made."
           schema:
-            $ref: '#/definitions/GuestAccountPost422Error'
+            $ref: '#/definitions/GuestAccount422Error'
         default:
-          description: Unexpected error
+          description: "Unexpected error"
           schema:
             $ref: '#/definitions/DefaultError'
    /securityQuestions:
@@ -82,15 +117,15 @@ paths:
          200:
            description: OK
            schema:
-             $ref: '#/definitions/SecurityQuestionsList'
+             $ref: "#/definitions/SecurityQuestionsList"
          422:
            description: "Unprocessable entry"
            schema:
-             $ref: '#/definitions/Error'      
+             $ref: "#/definitions/Error"
          default:
            description: "Error payload"
            schema:
-             $ref: '#/definitions/Error'
+             $ref: "#/definitions/Error"
    /{emailId}/validation:
     get:
       summary: "Guest Account email validation"
@@ -117,7 +152,7 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/UpdateAccountPasswordRequest'
+            $ref: "#/definitions/UpdateAccountPasswordRequest"
         - name: accountId
           in: path
           required: true
@@ -129,23 +164,23 @@ paths:
         200:
           description: OK
           schema:
-            $ref: '#/definitions/UpdateAccountPasswordResponse'
+            $ref: "#/definitions/UpdateAccountPasswordResponse"
         404:
           description: "Resource not found."
           schema: 
-            $ref: '#/definitions/Error'
+            $ref: "#/definitions/Error"
         429:
           description: "Too many requests."
           schema: 
-            $ref: '#/definitions/Error'
+            $ref: "#/definitions/Error"
         503:
           description: "Generic error (failback)."
           schema: 
-            $ref: '#/definitions/Error'
+            $ref: "#/definitions/Error"
         422:
           description: "Unprocessable Entry"
           schema:
-            $ref: '#/definitions/Error'
+            $ref: "#/definitions/Error"
    /{emailId}/forgotPassword:
     put:
       summary: "Guest Account Forgot Password"
@@ -201,86 +236,113 @@ definitions:
       brand:
        type: string
   GuestAccountPostRequestBody:
-    description: The POST request body schema.
+    description: "The POST request body schema."
     type: object
     properties:
       firstName:
         type: string
-        description: The guest's first name.
+        description: "The guest's first name."
       lastName:
         type: string
-        description: The guest's last name.
+        description: "The guest's last name."
       email:
         type: string
-        description: The guest email.
+        description: "The guest email."
       password:
         type: string
         format: password
-        description: The guest's desired password.
+        description: "The guest's desired password."
       brand:
         type: string
-        description: The single-char representation of the brand.
+        description: "The single-char representation of the brand."
       termsAndConditionsAgreement:
-        $ref: '#/definitions/TermsAndConditionsAgreement'
+        $ref: "#/definitions/TermsAndConditionsAgreement"
       securityQuestions:
-        description: A list of security question and answers.
+        description: "A list of security question and answers."
         type: array
         items:
-          $ref: '#/definitions/SecurityQuestion'
+          $ref: "#/definitions/SecurityQuestion"
   TermsAndConditionsAgreement:
-    description: The representation of a terms and conditions agreement.
+    description: "The representation of a terms and conditions agreement."
     type: object
     properties:
       acceptTime:
         type: number
         description: |
-          The instant (in milliseconds) that the user accepted the user accepted
-          the terms and conditions.
+          "The instant (in milliseconds) that the user accepted the user accepted
+          the terms and conditions."
       version:
         type: string
-        description: The version number of the agreed upon terms and conditions.
+        description: "The version number of the agreed upon terms and conditions."
   SecurityQuestionsList:
-    description: Represents a list of security questions.
+    description: "Represents a list of security questions."
     type: object
     items:
-      $ref: '#/definitions/Question'
+      $ref: "#/definitions/Question"
   Question:
-    description: Represents a unit of security question list.
+    description: "Represents a unit of security question list."
     type: object
     properties:
       question:
         type: string
   SecurityQuestion:
-    description: The representation of a security question and answer.
+    description: "The representation of a security question and answer."
     type: object
     properties:
       question:
         type: string
-        description: The security question.
+        description: "The security question."
       answer:
         type: string
-        description: The answer to the question.
+        description: "The answer to the question."
   GuestAccountPostSuccessResponse:
     type: object
     properties:
       accountId:
         type: string
-        description: The created guest account's ID.
+        description: "The created guest account's ID."
       links:
-        description: A list of links of interest.
+        description: "A list of links of interest."
         type: array
         items:
-          $ref: '#/definitions/Link'
-  GuestAccountPost422Error:
+          $ref: "#/definitions/Link"
+  GuestAccountPutRequestBody:
+    description: "The PUT request body schema."
+    type: object
+    properties:
+      firstName:
+        type: string
+        description: "The guest's first name."
+      lastName:
+        type: string
+        description: "The guest's last name."
+      email:
+        type: string
+        description: "The guest email."
+      password:
+        type: string
+        format: password
+        description: "The guest's desired password."
+      brand:
+        type: string
+        description: "The single-char representation of the brand."
+      securityQuestions:
+        description: "A list of security question and answers."
+        type: array
+        items:
+          $ref: "#/definitions/SecurityQuestion"
+  GuestAccountPutSuccessResponse:
+    type: string
+  GuestAccount422Error:
     type: object
     properties:
       error:
         type: string
       links:
-        description: A list of links of interest.
+        description: "A list of links of interest."
         type: array
         items:
-          $ref: '#/definitions/Link'
+          $ref: "#/definitions/Link"
   DefaultError:
     type: object
     properties:
@@ -349,4 +411,3 @@ definitions:
     properties: 
       error: 
         type: string
-
