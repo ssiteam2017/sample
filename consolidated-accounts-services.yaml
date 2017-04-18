@@ -81,8 +81,6 @@ paths:
       description: "This endpoint permits the creation of a guest account via a POST. A successful response simply returns the unique ID identifying the newly created user. A failure returns an identifying error with any potentially useful information."
       consumes:
         - application/json
-      produces:
-        - application/json
       parameters:
         - name: body
           in: body
@@ -126,6 +124,40 @@ paths:
            description: "Error payload"
            schema:
              $ref: "#/definitions/Error"
+   /{emailId}/securityQuestions/validation:
+     get:
+      description: A service to validate security question and answer.
+      parameters:
+        - name: emailId
+          in: path
+          required: true
+          type: string
+          format: string
+        - name: question
+          in: query
+          required: true
+          type: array
+          items:
+           type: string
+        - name: answer
+          in: query
+          required: true
+          type: array
+          items:
+           type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+              $ref: '#/definitions/ValidateSecurityQuestionResponse'
+        "422":
+          description: Unprocessable entry
+          schema:
+              $ref: '#/definitions/Error'      
+        default:
+          description: Error payload
+          schema:
+              $ref: '#/definitions/DefaultError'
    /{emailId}/validation:
     get:
       summary: "Guest Account email validation"
@@ -143,17 +175,17 @@ paths:
           description: "OK"
           schema:
             $ref: "#/definitions/ValidateEmailAddressResponse"
-   /{accountId}/password:
+   /{emailId}/password:
     put:
       summary: "Guest Account password update"
-      description: "Update or reset account password for a given accountId."
+      description: "Update or reset account password for a given emailId."
       parameters:
         - name: request body
           in: body
           required: true
           schema:
             $ref: "#/definitions/UpdateAccountPasswordRequest"
-        - name: accountId
+        - name: emailId
           in: path
           required: true
           type: string
@@ -295,6 +327,13 @@ definitions:
       answer:
         type: string
         description: "The answer to the question."
+  ValidateSecurityQuestionResponse:
+    type: object
+    required:
+      - isValid
+    properties:
+      isValid:
+        type: boolean
   GuestAccountPostSuccessResponse:
     type: object
     properties:
@@ -316,9 +355,6 @@ definitions:
       lastName:
         type: string
         description: "The guest's last name."
-      email:
-        type: string
-        description: "The guest email."
       password:
         type: string
         format: password
@@ -366,26 +402,15 @@ definitions:
   UpdateAccountPasswordRequest:
     type: object
     required:
-      - authenticationToken
       - password
     properties:
-      authenticationToken:
-        type: string
-        format: alphanumeric
       password:
         type: string
         format: alphanumeric
-      email:
-        type: string
       brand:
         type: string
   UpdateAccountPasswordResponse:
-    type: object
-    properties:
-      consumerId:
-        type: string
-      accountId:
-        type: string
+    type: string
   ForgotAccountPasswordRequest:
     type: object
     required:
