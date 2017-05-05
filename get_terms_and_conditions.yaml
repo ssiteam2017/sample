@@ -1,0 +1,60 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: Retrieve Terms And Conditions API
+host: mocktarget.apigee.net
+basePath: /v1/guestAccounts
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+   /termsAndConditions:
+     get:
+      description: A service to retrieve the terms and conditions from content API (AEM).
+      responses:
+        '200':
+          description: OK
+          schema:
+              $ref: '#/definitions/termsAndConsitionsResponse'
+        "422":
+          description: Unprocessable entry
+          schema:
+              $ref: '#/definitions/errorUnprocessable'
+        "500":      
+          description: Internal Server Error
+          schema:
+              $ref: '#/definitions/internalServerError'  
+        
+definitions:
+  termsAndConsitionsResponse:
+    type: object
+    required:
+      - tncDescription
+      - tncVersion
+    properties:
+      tncDescription:
+        type: string
+      tncVersion:
+        type: string  
+  errorUnprocessable:
+    type: object
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  internalServerError:
+    type: object
+    required:
+      - errorMessage
+      - statusCode
+    properties:
+      errorMessage:
+        type: string
+      statusCode:
+        type: string    
+        
