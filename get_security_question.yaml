@@ -16,7 +16,7 @@ paths:
      get:
       description: A service to retrieve a list of security questions.
       parameters:
-        - name: emailId
+        - name: email
           in: query
           required: false
           type: string
