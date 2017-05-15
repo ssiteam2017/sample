@@ -1,4 +1,4 @@
-# UCM Consumer Create/Update Spec.
+# Validate Security Question & Answer API
 # Be aware that YAML has indentation based scoping.
 # Code completion support is available so start typing for available options.
 swagger: '2.0'
@@ -36,19 +36,23 @@ paths:
           schema:
               $ref: '#/definitions/response'
         "422":
-          description: Unprocessable entry
+          description: Unprocessable Entry
           schema:
-              $ref: '#/definitions/errorUnprocessable'      
-        default:
-          description: Error payload
+              $ref: '#/definitions/errorUnprocessable'
+        "412":
+          description: Precondition Failed
           schema:
-              $ref: '#/definitions/error'
+              $ref: '#/definitions/errorPrecondition'       
+        "500":      
+          description: Internal Server Error
+          schema:
+              $ref: '#/definitions/internalServerError'
           
 definitions:
   RequestObject:
     type: object
     properties:
-      emailId:
+      email:
         type: string
         example: "carol.blue@gmail.com"
       securityQuestionAnswer:
@@ -74,14 +78,30 @@ definitions:
   errorUnprocessable:
     type: object
     required:
-      - message
+      - errorMessage
+      - statusCode
     properties:
-      message:
-        type: string      
-  error:
+      errorMessage:
+        type: string
+      statusCode:
+        type: string  
+  errorPrecondition:
     type: object
     required:
-      - message
+      - errorMessage
+      - statusCode
     properties:
-      message:
+      errorMessage:
+        type: string
+      statusCode:
+        type: string   
+  internalServerError:
+    type: object
+    required:
+      - errorMessage
+      - statusCode
+    properties:
+      errorMessage:
+        type: string
+      statusCode:
         type: string      
