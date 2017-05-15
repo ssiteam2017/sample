@@ -1,0 +1,86 @@
+#Security Questions API
+# Be aware that YAML has indentation based scoping.
+# Code completion support is available so start typing for available options.
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: Security Questions API
+host: mocktarget.apigee.net
+basePath: /v1/guestAccounts
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+   '/securityQuestions':
+     get:
+      description: A service to retrieve a list of security questions.
+      parameters:
+        - name: email
+          in: query
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+              $ref: '#/definitions/securityQ'
+        "422":
+          description: Unprocessable Entry
+          schema:
+              $ref: '#/definitions/errorUnprocessable'
+        "412":
+          description: Precondition Failed
+          schema:
+              $ref: '#/definitions/errorPrecondition'       
+        "500":      
+          description: Internal Server Error
+          schema:
+              $ref: '#/definitions/internalServerError'
+definitions:
+  securityQ:
+    type: object
+    properties:
+      securityQuestions: 
+        type: array
+        items:
+          $ref: '#/definitions/questions'
+  questions:
+    type: object
+    properties:
+      question:
+        type: string
+        example: "What is the name of your first dog?"
+  errorUnprocessable:
+    type: object
+    required:
+      - errorMessage
+      - statusCode
+    properties:
+      errorMessage:
+        type: string
+      statusCode:
+        type: string  
+  errorPrecondition:
+    type: object
+    required:
+      - errorMessage
+      - statusCode
+    properties:
+      errorMessage:
+        type: string
+      statusCode:
+        type: string   
+  internalServerError:
+    type: object
+    required:
+      - errorMessage
+      - statusCode
+    properties:
+      errorMessage:
+        type: string
+      statusCode:
+        type: string      
