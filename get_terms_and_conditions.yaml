@@ -21,9 +21,13 @@ paths:
           schema:
               $ref: '#/definitions/termsAndConsitionsResponse'
         "422":
-          description: Unprocessable entry
+          description: Unprocessable Entry
           schema:
               $ref: '#/definitions/errorUnprocessable'
+        "412":
+          description: Precondition Failed
+          schema:
+              $ref: '#/definitions/errorPrecondition'       
         "500":      
           description: Internal Server Error
           schema:
@@ -43,10 +47,23 @@ definitions:
   errorUnprocessable:
     type: object
     required:
-      - message
+      - errorMessage
+      - statusCode
     properties:
-      message:
+      errorMessage:
         type: string
+      statusCode:
+        type: string  
+  errorPrecondition:
+    type: object
+    required:
+      - errorMessage
+      - statusCode
+    properties:
+      errorMessage:
+        type: string
+      statusCode:
+        type: string   
   internalServerError:
     type: object
     required:
@@ -56,5 +73,5 @@ definitions:
       errorMessage:
         type: string
       statusCode:
-        type: string    
+        type: string      
         
